@@ -1,0 +1,17 @@
+# Render outputs
+*.stl
+*.3mf
+*.off
+*.amf
+*.png
+*.echo
+
+# OpenSCAD backup files
+*.scad.bak
+*-backup.scad
+
+# Editor cruft
+*.swp
+*~
+.vscode/
+.idea/
