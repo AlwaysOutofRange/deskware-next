@@ -21,9 +21,9 @@ TOTAL_HEIGHT = 107.5;
 
 /*[Print Bed]*/
 //Maximum printable width (mm) of your printer.
-MAX_PRINT_WIDTH = 256;
+MAX_PRINT_WIDTH = 175;
 //Maximum printable depth (mm) of your printer.
-MAX_PRINT_DEPTH = 256;
+MAX_PRINT_DEPTH = 175;
 
 /*[Walls and Fit]*/
 //Wall thickness (mm) of drawers and boxes.
