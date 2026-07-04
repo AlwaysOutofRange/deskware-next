@@ -55,6 +55,24 @@ MAGNET_DIAMETER = 6;
 //Magnet height (mm) for magnet-style connections.
 MAGNET_HEIGHT = 2;
 
+/*[Drawers]*/
+//Mounting method of the drawer pull (printed handle vs hardware screws).
+DRAWER_MOUNTING = "Handle - Printed"; //[Screw Holes - Single, Screw Holes - Double, Handle - Printed]
+//Chamfer (mm) of the drawer front edges.
+DRAWER_FRONT_CHAMFER = 1;
+//Screw diameter (mm) when using hardware drawer pulls (5mm is common).
+DRAWER_PULL_SCREW_DIAMETER = 5;
+//Distance (mm) between screw hole centers for double-screw pulls.
+DRAWER_PULL_SCREW_SPACING = 75;
+//Move the drawer pull holes up (positive) or down (negative) in mm.
+DRAWER_PULL_HEIGHT_ADJUST = 0;
+//Recess the drawer front for an inlay. Removes the dovetails (print orientation); glue the front to the box.
+DRAWER_FRONT_RECESS = false;
+//Depth (mm) of the front inlay recess.
+DRAWER_FRONT_RECESS_DEPTH = 0.5;
+//Inset (mm) of the front inlay recess from the front edges.
+DRAWER_FRONT_RECESS_INSET = 0.4;
+
 /*[Curve Sections]*/
 //Inner radius (mm) of curved (arc) sections, measured from the riser face.
 CURVE_RADIUS = 50;

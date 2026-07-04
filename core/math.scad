@@ -63,3 +63,40 @@ function top_plate_depth(base_plate_depth, interface_chamfer, lateral_clearance)
 
 //The riser is set back from the core section depth.
 function riser_depth(core_depth, setback) = core_depth - setback;
+
+//---------- Drawer slides ----------
+
+//How many drawer slides fit on a riser of the given height.
+function slide_count(riser_height, from_bottom, slide_height, min_from_top, separation) =
+    floor((riser_height - from_bottom - slide_height - min_from_top) / separation + 1);
+
+//Distance from the top of the drawer body to the top of its rail.
+function drawer_slide_from_top(separation, from_bottom, slide_height, slide_clearance, vertical_clearance, clearance) =
+    separation - from_bottom - slide_height - slide_clearance - vertical_clearance + clearance;
+
+//---------- Drawer dimensions ----------
+
+//Outside width of the drawer box: it spans between the riser faces (the
+//riser bodies and mating clearances cancel out to exactly this).
+function drawer_outside_width(core_width, riser_width) =
+    core_width - riser_width;
+
+//Outside depth of the drawer box: the available depth in front of the
+//backer, with the interior rounded down to whole Gridfinity units.
+function drawer_outside_depth(core_depth, backer_cutout, clearance, wall, unit) =
+    floor((core_depth - backer_cutout - clearance) / unit) * unit + wall * 2;
+
+//Height of a drawer body of the given number of slide units.
+function drawer_height(height_units, separation, vertical_clearance) =
+    height_units * separation - vertical_clearance;
+
+//---------- Backer grid ----------
+
+//openGrid units that fit up a backer of the given height.
+function backer_grid_height_units(backer_height, unit, bottom_margin, top_margin) =
+    grid_units_fit(backer_height, unit, bottom_margin + top_margin);
+
+//True when too little material remains above the grid field, so the HOK
+//connector cutouts need reinforcement blocks behind the grid.
+function backer_needs_hok_blocks(backer_height, grid_height_mm, bottom_margin, safe_clearance) =
+    backer_height - grid_height_mm - bottom_margin < safe_clearance;

@@ -29,8 +29,14 @@ include <geometry/extrusions.scad>
 include <connectors/hok.scad>
 include <connectors/dovetail.scad>
 include <connectors/tabs.scad>
+include <connectors/slides.scad>
+include <connectors/screws.scad>
 
 include <vendor/opengrid.scad>
 
 include <modules/base_plate.scad>
 include <modules/top_plate.scad>
+include <modules/drawer.scad>
+include <modules/drawer_handle.scad>
+include <modules/riser.scad>
+include <modules/backer.scad>

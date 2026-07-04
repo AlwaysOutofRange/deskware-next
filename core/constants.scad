@@ -68,6 +68,55 @@ BASEPLATE_GRID_DEPTH_MARGIN = 18;
 //How much shallower the riser is than the core section
 RISER_SETBACK = 7.5;
 
+//---------- Drawer slide profile (drawer rail <-> riser recess interop) ----------
+
+//Width (and rise of angle) of the slide recess
+SLIDE_WIDTH = 4;
+//Total height of the slide recess
+SLIDE_HEIGHT = 10.5;
+//Vertical distance between slides (one drawer height unit)
+SLIDE_SEPARATION = 40;
+//Distance from the bottom of the riser to the bottom of the slide recess
+SLIDE_FROM_BOTTOM = 11.75;
+//Minimum clearance from the top of a slide to the top of the riser
+SLIDE_MIN_FROM_TOP = 16.75;
+//Clearance between the drawer rail and the riser recess
+SLIDE_CLEARANCE = 0.25;
+
+//---------- Drawer interop dimensions ----------
+
+//Vertical clearance between the drawer body and its height allotment
+DRAWER_VERTICAL_CLEARANCE = 1.5;
+//Vertical microadjustment of the drawer rail relative to the slide
+DRAWER_SLIDE_MICROADJUST = 0.5;
+//Dovetails joining the drawer front to the drawer box
+DRAWER_DOVETAIL_WIDTH = 10;
+DRAWER_DOVETAIL_HEIGHT = 25;
+//Thickness of the drawer front panel
+DRAWER_FRONT_THICKNESS = 3.5;
+//The drawer box front wall is this much shorter for the front panel to overlap
+DRAWER_FRONT_HEIGHT_REDUCTION = 4.5;
+//Center-to-center spacing of the printed handle's screw connections
+HANDLE_SCREW_SPACING = 70;
+//Lateral gap between the drawer front panel and the section edges
+DRAWER_FRONT_LATERAL_CLEARANCE = 2;
+
+//---------- Backer interop dimensions ----------
+
+BACKER_THICKNESS = 12.5;
+//Depth of the cutouts that let the risers overlap the backer sides
+BACKER_SIDE_CUTOUT_DEPTH = 3.65;
+//Inset and depth of the backer-to-riser alignment tabs
+BACKER_TAB_INSET = 2;
+BACKER_TAB_DEPTH = 8;
+//Solid base below the backer's openGrid field
+BACKER_GRID_FROM_BOTTOM = 2;
+//Minimum solid space above the backer's openGrid field
+BACKER_GRID_TOP_MARGIN = 2;
+//If less than this remains above the grid, reinforcement blocks back the
+//HOK connector cutouts
+BACKER_HOK_SAFE_CLEARANCE = 17;
+
 //---------- Small printed screw thread profile ----------
 
 //Distance between threads

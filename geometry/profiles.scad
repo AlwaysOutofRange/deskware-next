@@ -43,6 +43,25 @@ function top_plate_profile(depth, total_height, bottom_chamfer, top_chamfer, top
 //  interface_chamfer - chamfer of the lip the top plate seats against
 //  resting_surface   - minimum flat shelf the top plate rests on
 //  tile_pocket       - depth of the openGrid tile pocket (sets the well floor)
+//Cross-section of the drawer rail that rides in the riser's slide recess.
+//The rail is shrunk by the slide clearance so it glides.
+function drawer_slide_profile(width, height, slide_clearance) =
+    [
+        [0, 0],
+        [width - slide_clearance, width - slide_clearance],
+        [width - slide_clearance, height - slide_clearance*2],
+        [0, height - slide_clearance*2],
+    ];
+
+//Cross-section of the slide recess subtracted from the riser (full size).
+function drawer_slide_cutout_profile(width, height) =
+    [
+        [0, 0],
+        [width, width],
+        [width, height],
+        [0, height],
+    ];
+
 function base_plate_profile(depth, height, bottom_chamfer, interface_chamfer, resting_surface, tile_pocket) =
     let(well = height - tile_pocket)
     [
