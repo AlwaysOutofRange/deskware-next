@@ -90,6 +90,13 @@ function drawer_outside_depth(core_depth, backer_cutout, clearance, wall, unit) 
 function drawer_height(height_units, separation, vertical_clearance) =
     height_units * separation - vertical_clearance;
 
+//---------- Dividers ----------
+
+//Interior size of one compartment when `count` compartments share `span`
+//separated by walls of `thickness`.
+function compartment_size(span, count, thickness) =
+    (span - (count - 1) * thickness) / count;
+
 //---------- Backer grid ----------
 
 //openGrid units that fit up a backer of the given height.

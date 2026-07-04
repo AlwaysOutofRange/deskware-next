@@ -32,7 +32,7 @@ prints.
 | `core/` | Fixed system constants, pure derivation functions, shared helpers |
 | `geometry/` | 2D cross-section profiles and sweep helpers |
 | `connectors/` | HOK connectors, dovetails, alignment tabs |
-| `modules/` | The parts: base plate, top plate, drawer + front, handle, riser, backer |
+| `modules/` | The parts: base plate, top plate, drawer + front, handle, riser, backer, dividers |
 | `vendor/` | openGrid tiles (by David D), ported verbatim |
 | `examples/` | Ready-to-render demos |
 | `legacy/` | The original monolithic sources, unmodified (reference) |
@@ -42,7 +42,7 @@ prints.
 - [x] **M1** — project structure, configuration system, shared utilities
 - [x] **M2** — dynamic base/top plate generators
 - [x] **M3** — dynamic drawer generator (plus riser and backer, completing the core section)
-- [ ] **M4** — dynamic divider system
+- [x] **M4** — dynamic divider system (`drawer(rows, columns)` + drop-in `divider_insert()`)
 - [ ] **M5** — connector system
 - [ ] **M6** — accessories
 - [ ] **M7** — automatic split generation for oversized parts

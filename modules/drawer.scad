@@ -21,6 +21,10 @@ module drawer(
     depth = drawer_outside_depth(PLATE_DEPTH, BACKER_SIDE_CUTOUT_DEPTH, CLEARANCE, WALL_THICKNESS, GRIDFINITY_UNIT),
     wall = WALL_THICKNESS,
     bottom = BOTTOM_THICKNESS,
+    rows = 1,
+    columns = 1,
+    divider_thickness = DIVIDER_THICKNESS,
+    divider_height = undef,
     slide_separation = SLIDE_SEPARATION,
     vertical_clearance = DRAWER_VERTICAL_CLEARANCE,
     slide_inset = drawer_slide_from_top(SLIDE_SEPARATION, SLIDE_FROM_BOTTOM, SLIDE_HEIGHT, SLIDE_CLEARANCE, DRAWER_VERTICAL_CLEARANCE, CLEARANCE) + DRAWER_SLIDE_MICROADJUST,
@@ -39,6 +43,8 @@ module drawer(
 ){
     inside = width - wall*2;
     height = drawer_height(height_units, slide_separation, vertical_clearance);
+    //dividers reach the rim unless a height is given
+    div_height = first_defined([divider_height, height - bottom]);
     //dovetail centers sit 14mm inside each interior wall (matches original)
     front_dovetail_spacing = inside - 28;
     pull_hole_count =
@@ -49,6 +55,10 @@ module drawer(
     check_printable([width, depth], "drawer");
     debug_echo(str("drawer inside is ", inside % GRIDFINITY_UNIT == 0 ? "" : "NOT ",
                    "a Gridfinity fit (", inside, " mm wide, ", inside % GRIDFINITY_UNIT, " mm extra)"));
+    if(rows > 1 || columns > 1)
+        debug_echo(str("drawer compartments: ", columns, " x ", rows, ", each ",
+                       compartment_size(inside, columns, divider_thickness), " x ",
+                       compartment_size(depth - wall*2, rows, divider_thickness), " mm"));
 
     tag_scope()
     recolor(col)
@@ -61,6 +71,13 @@ module drawer(
         tag("keep")
         attach(BOT, BOT, inside=true)
             cuboid([width-0.01, depth-0.01, bottom]);
+        //compartment dividers
+        if(rows > 1 || columns > 1)
+            tag("keep")
+            up(bottom)
+            attach(BOT, BOT, inside=true)
+                divider_grid([inside, depth - wall*2, div_height],
+                             rows = rows, columns = columns, thickness = divider_thickness);
         //slots for the front panel's dovetail keys
         xcopies(spacing=front_dovetail_spacing)
         attach(FRONT, FRONT, inside=true, shiftout=0.01, align=TOP, inset=-0.01)

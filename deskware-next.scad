@@ -36,6 +36,7 @@ include <vendor/opengrid.scad>
 
 include <modules/base_plate.scad>
 include <modules/top_plate.scad>
+include <modules/dividers.scad>
 include <modules/drawer.scad>
 include <modules/drawer_handle.scad>
 include <modules/riser.scad>

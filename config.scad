@@ -32,6 +32,8 @@ WALL_THICKNESS = 3;
 BOTTOM_THICKNESS = 2;
 //Clearance (mm) between mating parts.
 CLEARANCE = 0.15;
+//Wall thickness (mm) of drawer compartment dividers.
+DIVIDER_THICKNESS = 2;
 //Corner radius (mm) for rounded-square end pieces.
 CORNER_RADIUS = 50;
 
