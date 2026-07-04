@@ -5,10 +5,16 @@ Automatic split generation: cut a part that exceeds the print bed into
 printable pieces, with mating seam connectors (see connectors/connectors.scad)
 at every cut. Works on any child geometry.
 
-Usage:
-
     split_part(size = [420, 211, 9.5], gap = 20)
         top_plate(width = 420, anchor=BOT);
+
+Modes:
+- axis "x" or "y": cuts across one axis, loose-key connectors at each seam
+- axis "both": grid split for parts exceeding the bed in both directions;
+  connectors near seam crossings are dropped automatically (keepout)
+- style "puzzle": interlocking glue seam through the whole cross-section
+  (BOSL2 partition) - the only viable split for thin-walled parts like
+  drawers; supports exactly 2 pieces on one axis, prints no loose keys
 
 Convention: the child part must be centered on the origin in X and Y with
 Z rising from 0 - i.e. rendered with anchor=BOT at the origin, which is how
@@ -17,19 +23,19 @@ every DeskWare Next part is generated.
 Licensed CC-BY-NC-SA 4.0. See LICENSE.md for attribution.
 */
 
-//Cut children into printable pieces along one axis.
+//Cut children into printable pieces.
 //  size        - [x, y, z] bounding box of the child part
-//  axis        - "x" or "y": the axis to cut across
-//  max_span    - bed limit for the cut axis (default: the matching MAX_PRINT_*)
-//  cuts        - explicit cut positions (centered offsets), or undef to
-//                divide evenly into as few pieces as fit. Use this to steer
-//                cuts away from features like openGrid fields.
+//  axis        - "x", "y", or "both"
+//  max_span    - bed limit override (default: the matching MAX_PRINT_*)
+//  cuts        - explicit cut positions (single-axis modes only)
 //  seam        - [width, height] of the seam cross-section; defaults to the
 //                full part cross-section. Lower the height when the part is
 //                thinner at the cut (e.g. a base plate's grid well).
-//  style       - seam connector style (dovetail, dowel, magnet)
+//  style       - seam connector style (dovetail, dowel, magnet, puzzle)
+//  keepout     - drop connectors closer than this to a crossing seam
 //  gap         - explode distance between pieces (0 = assembled in place)
 //  show_keys   - also render the loose connector keys at each seam
+//  puzzle_cutsize - tooth size of puzzle seams
 module split_part(
     size,
     axis = "x",
@@ -39,57 +45,106 @@ module split_part(
     style = CONNECTOR_STYLE,
     spacing = CONNECTOR_SPACING,
     edge_margin = 15,
+    keepout = 15,
     gap = 0,
     show_keys = true,
-    key_col = PRIMARY_COLOR
+    key_col = PRIMARY_COLOR,
+    puzzle_cutsize = 10
 ){
-    assert(axis == "x" || axis == "y", "split_part axis must be \"x\" or \"y\"");
-    a = axis == "x" ? 0 : 1;
-    span = size[a];
-    limit = first_defined([max_span, axis == "x" ? MAX_PRINT_WIDTH : MAX_PRINT_DEPTH]);
+    assert(axis == "x" || axis == "y" || axis == "both", "split_part axis must be \"x\", \"y\", or \"both\"");
 
-    n = first_defined([is_undef(cuts) ? undef : len(cuts) + 1, split_count(span, limit)]);
-    cut_list = first_defined([cuts, split_positions(span, n)]);
-    seam_sz = first_defined([seam, [size[1-a], size.z]]);
+    do_x = axis != "y";
+    do_y = axis != "x";
+    limit_x = first_defined([max_span, MAX_PRINT_WIDTH]);
+    limit_y = first_defined([max_span, MAX_PRINT_DEPTH]);
 
-    piece_span = span / n;
-    if(piece_span > limit)
-        echo(str("WARNING: split pieces are still ", piece_span, " mm across the cut axis (bed limit ", limit, " mm) - add more cuts"));
-    debug_echo(str("split_part: ", n, " piece(s) of ~", piece_span, " mm, cuts at ", cut_list));
+    nx = !do_x ? 1 : (!is_undef(cuts) && axis == "x") ? len(cuts) + 1 : split_count(size.x, limit_x);
+    ny = !do_y ? 1 : (!is_undef(cuts) && axis == "y") ? len(cuts) + 1 : split_count(size.y, limit_y);
+    assert(is_undef(cuts) || axis != "both", "explicit cuts are only supported for single-axis splits");
 
-    //offset of piece i along the cut axis when exploded
-    function piece_offset(i) = (i - (n-1)/2) * gap;
+    cx = do_x ? ((!is_undef(cuts) && axis == "x") ? cuts : split_positions(size.x, nx)) : [];
+    cy = do_y ? ((!is_undef(cuts) && axis == "y") ? cuts : split_positions(size.y, ny)) : [];
 
-    for(i = [0:1:n-1]){
-        lo = i == 0     ? -span/2 - 1 : cut_list[i-1];
-        hi = i == n-1   ?  span/2 + 1 : cut_list[i];
-        translate(axis == "x" ? [piece_offset(i), 0, 0] : [0, piece_offset(i), 0])
-        difference(){
-            intersection(){
-                children();
-                translate(axis == "x" ? [(lo+hi)/2, 0, size.z/2] : [0, (lo+hi)/2, size.z/2])
-                    cube(axis == "x" ? [hi-lo, size.y+2, size.z+2] : [size.x+2, hi-lo, size.z+2], center=true);
+    if(style == "puzzle"){
+        assert(axis != "both" && (axis == "x" ? nx : ny) == 2,
+               "puzzle splits support exactly 2 pieces on one axis");
+        //Interlocking glue seam through the full cross-section. The teeth
+        //are sized to tile the whole cut line (odd count, so the seam stays
+        //symmetric): BOSL2's partition mask ends at the last tooth and
+        //would otherwise eat any straight remainder of the cut line. The
+        //mask spans size exactly, so pad it: +1 along the cut line (it also
+        //shrinks by $slop) and a hair in z; pass a size.z that covers any
+        //features poking above the part (e.g. a drawer front's keys).
+        cutline = (axis == "x" ? size.y : size.x) + 1;
+        teeth = let(r = round(cutline / (puzzle_cutsize*2))) is_odd(r) ? r : r + 1;
+        $slop = CLEARANCE; //mating clearance at the seam
+        up(size.z/2)
+            partition(size = size + (axis == "x" ? [0, 1, 0.02] : [1, 0, 0.02]),
+                      spread = max(gap, puzzle_cutsize*2),
+                      cutsize = [cutline/teeth * (1 - 1e-9), puzzle_cutsize],
+                      cutpath = "dovetail",
+                      spin = axis == "x" ? -90 : 0)
+                down(size.z/2)
+                    children();
+    }
+    else split_grid() children();
+
+    module split_grid(){
+        //seam widths always span the part; only the height is overridable
+        seam_h = is_undef(seam) ? size.z : seam.y;
+        seam_x_sz = [size.y, seam_h]; //seams from x-cuts
+        seam_y_sz = [size.x, seam_h]; //seams from y-cuts
+
+        //connector layouts, dropping positions too close to a crossing seam
+        pos_x = filter_positions(connector_positions(seam_x_sz.x, spacing, edge_margin), cy);
+        pos_y = filter_positions(connector_positions(seam_y_sz.x, spacing, edge_margin), cx);
+
+        px = size.x / nx;
+        py = size.y / ny;
+        if((do_x && px > limit_x) || (do_y && py > limit_y))
+            echo(str("WARNING: split pieces are still ", px, " x ", py,
+                     " mm (bed limit ", limit_x, " x ", limit_y, " mm) - add more cuts or use axis=\"both\""));
+        debug_echo(str("split_part: ", nx, " x ", ny, " piece(s) of ~", px, " x ", py, " mm"));
+
+        for(ix = [0:1:nx-1], iy = [0:1:ny-1]){
+            xlo = ix == 0      ? -size.x/2 - 1 : cx[ix-1];
+            xhi = ix == nx-1   ?  size.x/2 + 1 : cx[ix];
+            ylo = iy == 0      ? -size.y/2 - 1 : cy[iy-1];
+            yhi = iy == ny-1   ?  size.y/2 + 1 : cy[iy];
+            translate([offset_along(ix, nx), offset_along(iy, ny), 0])
+            difference(){
+                intersection(){
+                    children();
+                    translate([(xlo+xhi)/2, (ylo+yhi)/2, size.z/2])
+                        cube([xhi-xlo, yhi-ylo, size.z+2], center=true);
+                }
+                for(c = cx) if(c == xlo || c == xhi)
+                    translate([c, 0, 0]) zrot(90)
+                        seam_connector_cutouts(style=style, seam=seam_x_sz, positions=pos_x, spacing=spacing, edge_margin=edge_margin);
+                for(c = cy) if(c == ylo || c == yhi)
+                    translate([0, c, 0])
+                        seam_connector_cutouts(style=style, seam=seam_y_sz, positions=pos_y, spacing=spacing, edge_margin=edge_margin);
             }
-            //connector cutouts at this piece's seams
-            for(c = cut_list)
-                if(c == lo || c == hi)
-                    seam_at(c)
-                        seam_connector_cutouts(style=style, seam=seam_sz, spacing=spacing, edge_margin=edge_margin);
+        }
+
+        //loose keys, each following its (possibly exploded) piece pair
+        if(show_keys){
+            for(j = [0:1:len(cx)-1], p = pos_x)
+                translate([(j + 0.5 - (nx-1)/2) * gap, offset_along(row_of(p, cy), ny), 0])
+                    translate([cx[j], 0, 0]) zrot(90)
+                        seam_connector_keys(style=style, seam=seam_x_sz, positions=[p], col=key_col);
+            for(j = [0:1:len(cy)-1], p = pos_y)
+                translate([offset_along(row_of(p, cx), nx), (j + 0.5 - (ny-1)/2) * gap, 0])
+                    translate([0, cy[j], 0])
+                        seam_connector_keys(style=style, seam=seam_y_sz, positions=[p], col=key_col);
         }
     }
 
-    //loose keys, floating at each (possibly exploded) seam
-    if(show_keys)
-        for(j = [0:1:len(cut_list)-1])
-            translate(axis == "x" ? [(j + 0.5 - (n-1)/2) * gap, 0, 0] : [0, (j + 0.5 - (n-1)/2) * gap, 0])
-                seam_at(cut_list[j])
-                    seam_connector_keys(style=style, seam=seam_sz, spacing=spacing, edge_margin=edge_margin, col=key_col);
-
-    //places children in the seam frame of a cut at offset c
-    module seam_at(c){
-        if(axis == "x")
-            translate([c, 0, 0]) zrot(90) children();
-        else
-            translate([0, c, 0]) children();
-    }
+    //explode offset of piece i out of n
+    function offset_along(i, n) = (i - (n-1)/2) * gap;
+    //which piece row/column a seam position falls into
+    function row_of(p, cuts_list) = len([for(c = cuts_list) if(c < p) 1]);
+    //drop connector positions within keepout of a perpendicular cut
+    function filter_positions(ps, perp) =
+        [for(p = ps) if(len([for(c = perp) if(abs(p - c) < keepout) 1]) == 0) p];
 }

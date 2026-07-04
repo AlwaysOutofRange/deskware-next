@@ -99,18 +99,30 @@ parts occupy +Y/−Y. Primitives are also available directly:
 
 ```scad
 split_part(size = [420, 211, 9.5],   //bbox of the child (anchor=BOT at origin)
-           axis = "x",               //cut across x or y
-           style = "dovetail",       //seam connector style
+           axis = "x",               //"x", "y", or "both" (grid split)
+           style = "dovetail",       //dovetail, dowel, magnet, or puzzle
            cuts = undef,             //explicit cut positions (steer around features)
-           seam = undef,             //[width, height] joint cross-section override
+           seam = undef,             //[width, height]: height override for the joints
+           keepout = 15,             //drop connectors this close to a crossing seam
+           show_keys = true,         //render the loose keys next to each seam
            gap = 20)                 //explode distance (0 = assembled)
     top_plate(width = 420, anchor=BOT);
 ```
 
 Derives the piece count from `MAX_PRINT_*`, subtracts mating seam cutouts
-at every cut, and renders the loose keys. Use `seam=` where a part is
-thinner at the cut (e.g. `[depth, BASEPLATE_TILE_POCKET]` for a base
-plate's grid well) and `cuts=` to keep seams out of grid fields.
+at every cut, and renders the loose keys. `axis="both"` grid-splits a part
+that exceeds the bed in both directions, keeping connectors away from the
+seam crossings. `style="puzzle"` cuts an interlocking glue seam through the
+whole cross-section instead of using loose keys (exactly 2 pieces on one
+axis) - the right choice for thin-walled parts like drawers, fronts, and
+backers, where a key would poke through the walls. Use `seam=` where a part
+is thinner at the cut (e.g. `[0, BASEPLATE_TILE_POCKET]` puts a base
+plate's dowels in the solid floor under its grid well) and `cuts=` to keep
+seams out of grid fields.
+
+`examples/test_print_200.scad` exercises all of this: a complete
+200 x 200.5 x 107.5 mm system where every part is pre-split for a
+175 x 175 mm bed, selectable per print plate through the Customizer.
 
 ## Derivation functions (`core/math.scad`)
 

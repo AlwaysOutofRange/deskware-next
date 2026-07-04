@@ -12,6 +12,9 @@ remain print-interchangeable with original DeskWare.
 
 - OpenSCAD (recent version; developed against 2026.06)
 - [BOSL2](https://github.com/BelfrySCAD/BOSL2) on the OpenSCAD library path
+- The experimental `roof` feature enabled (GUI: Preferences → Features →
+  roof; CLI: `--enable=roof`) — the end caps use it, and OpenSCAD silently
+  renders them incomplete without it
 
 ## Quick start
 
@@ -46,6 +49,7 @@ The full API is documented in [`docs/reference.md`](docs/reference.md).
 | ![](docs/images/core_section_demo.png) **[core_section_demo](examples/core_section_demo.scad)** — one full core section, placements derived from config | ![](docs/images/divided_drawer_demo.png) **[divided_drawer_demo](examples/divided_drawer_demo.scad)** — built-in `rows × columns` compartments and the drop-in `divider_insert()` |
 | ![](docs/images/split_demo.png) **[split_demo](examples/split_demo.scad)** — a 420 mm top plate split two ways (dovetails / hidden dowels) | ![](docs/images/connector_fit_test.png) **[connector_fit_test](examples/connector_fit_test.scad)** — printable fit coupons for every seam connector style |
 | ![](docs/images/inlay_drawer_front.png) **[inlay_drawer_front](examples/inlay_drawer_front.scad)** — recessed drawer front with a printable contrast inlay | ![](docs/images/plates_demo.png) **[plates_demo](examples/plates_demo.scad)** — base + top plates at default and arbitrary dimensions |
+| ![](docs/images/test_print_200.png) **[test_print_200](examples/test_print_200.scad)** — a complete 200 mm test system pre-split for a 175 mm bed: 2×2 grid splits with hidden dowels, puzzle glue seams for thin walls | |
 
 ## Structure
 
