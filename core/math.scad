@@ -90,6 +90,18 @@ function drawer_outside_depth(core_depth, backer_cutout, clearance, wall, unit) 
 function drawer_height(height_units, separation, vertical_clearance) =
     height_units * separation - vertical_clearance;
 
+//---------- Connector placement ----------
+
+//Evenly spread connector positions along a seam of the given span, keeping
+//actual spacing at or below target_spacing. Returns a list of offsets
+//centered on 0; a single centered connector if the seam is too small.
+function connector_positions(span, target_spacing, edge_margin = 15) =
+    let(usable = span - edge_margin*2)
+    usable <= 0 ? [0] :
+    let(n = max(2, ceil(usable / target_spacing) + 1),
+        step = usable / (n - 1))
+    [for(i = [0:n-1]) -usable/2 + i*step];
+
 //---------- Dividers ----------
 
 //Interior size of one compartment when `count` compartments share `span`

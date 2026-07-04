@@ -24,3 +24,14 @@ module dovetail_female(width = DOVETAIL_WIDTH, height = DOVETAIL_HEIGHT, depth =
     dovetail("female", slide=depth, width=width, height=height, chamfer=chamfer, slope = 4, taper = -3, $slop = 0, anchor=anchor, spin=spin, orient=orient)
         children();
 }
+
+//Mirrored pair of female sockets spanning a seam (subtract from both
+//halves at once): the negative that dovetail_male() drops into. Mirrors
+//the male's construction so the pair always mates.
+module dovetail_socket_pair(width = DOVETAIL_WIDTH, height = DOVETAIL_HEIGHT, depth = DOVETAIL_DEPTH, chamfer = DOVETAIL_CHAMFER, anchor=CENTER, spin = 0, orient = UP){
+    attachable(anchor, spin, orient, size=[width, height*2, depth]){
+        mirror_copy([0,1,0])
+            dovetail("female", slide=depth, width=width, height=height, chamfer=chamfer, taper = -3, slope = 4, $slop = 0, anchor=BOT, orient=FRONT);
+        children();
+    }
+}

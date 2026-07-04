@@ -28,9 +28,12 @@ include <geometry/extrusions.scad>
 
 include <connectors/hok.scad>
 include <connectors/dovetail.scad>
+include <connectors/dowel.scad>
+include <connectors/magnets.scad>
 include <connectors/tabs.scad>
 include <connectors/slides.scad>
 include <connectors/screws.scad>
+include <connectors/connectors.scad>
 
 include <vendor/opengrid.scad>
 

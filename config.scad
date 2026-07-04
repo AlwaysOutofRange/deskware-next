@@ -50,12 +50,18 @@ TOP_PLATE_TOP_CHAMFER = 2;
 TOP_PLATE_CLEARANCE = 1;
 
 /*[Connectors]*/
-//Connector style for joining and splitting parts (splitting arrives in a later milestone).
-CONNECTOR_STYLE = "hok"; //[hok, dovetail, dowel, magnet]
+//Joint style for seams between split or side-by-side parts. (HOK connectors handle stacking and are built into the parts themselves.)
+CONNECTOR_STYLE = "dovetail"; //[dovetail, dowel, magnet]
+//Target spacing (mm) between connectors along a seam.
+CONNECTOR_SPACING = 50;
 //Magnet diameter (mm) for magnet-style connections.
 MAGNET_DIAMETER = 6;
 //Magnet height (mm) for magnet-style connections.
 MAGNET_HEIGHT = 2;
+//Dowel pin diameter (mm) for dowel-style connections.
+DOWEL_DIAMETER = 4;
+//Dowel pin length (mm), split evenly across the seam.
+DOWEL_LENGTH = 16;
 
 /*[Drawers]*/
 //Mounting method of the drawer pull (printed handle vs hardware screws).

@@ -31,7 +31,7 @@ prints.
 | `config.scad` | User-facing parameters (dimensions, clearances, print bed, colors) |
 | `core/` | Fixed system constants, pure derivation functions, shared helpers |
 | `geometry/` | 2D cross-section profiles and sweep helpers |
-| `connectors/` | HOK connectors, dovetails, alignment tabs |
+| `connectors/` | HOK connectors, dovetails, dowels, magnets, tabs, slides, screws, seam joint API |
 | `modules/` | The parts: base plate, top plate, drawer + front, handle, riser, backer, dividers |
 | `vendor/` | openGrid tiles (by David D), ported verbatim |
 | `examples/` | Ready-to-render demos |
@@ -43,7 +43,7 @@ prints.
 - [x] **M2** — dynamic base/top plate generators
 - [x] **M3** — dynamic drawer generator (plus riser and backer, completing the core section)
 - [x] **M4** — dynamic divider system (`drawer(rows, columns)` + drop-in `divider_insert()`)
-- [ ] **M5** — connector system
+- [x] **M5** — connector system (`CONNECTOR_STYLE`-dispatched seam joints: dovetail, dowel, magnet)
 - [ ] **M6** — accessories
 - [ ] **M7** — automatic split generation for oversized parts
 - [ ] **M8** — documentation and examples
