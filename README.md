@@ -40,7 +40,7 @@ prints.
 ## Milestone status
 
 - [x] **M1** — project structure, configuration system, shared utilities
-- [ ] **M2** — dynamic base/top plate generators
+- [x] **M2** — dynamic base/top plate generators
 - [ ] **M3** — dynamic drawer generator
 - [ ] **M4** — dynamic divider system
 - [ ] **M5** — connector system

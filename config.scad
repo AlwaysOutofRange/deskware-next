@@ -55,6 +55,10 @@ MAGNET_DIAMETER = 6;
 //Magnet height (mm) for magnet-style connections.
 MAGNET_HEIGHT = 2;
 
+/*[Curve Sections]*/
+//Inner radius (mm) of curved (arc) sections, measured from the riser face.
+CURVE_RADIUS = 50;
+
 /*[Colors]*/
 PRIMARY_COLOR = "#dadada"; // color
 TOP_PLATE_COLOR = "#dadada"; // color

@@ -22,3 +22,15 @@ include <core/constants.scad>
 include <config.scad>
 include <core/math.scad>
 include <core/utilities.scad>
+
+include <geometry/profiles.scad>
+include <geometry/extrusions.scad>
+
+include <connectors/hok.scad>
+include <connectors/dovetail.scad>
+include <connectors/tabs.scad>
+
+include <vendor/opengrid.scad>
+
+include <modules/base_plate.scad>
+include <modules/top_plate.scad>
