@@ -36,6 +36,8 @@ CLEARANCE = 0.15;
 DIVIDER_THICKNESS = 2;
 //Corner radius (mm) for rounded-square end pieces.
 CORNER_RADIUS = 50;
+//Style of the end pieces capping the outer sections.
+END_STYLE = "Rounded Square"; //[Rounded, Squared, Rounded Square]
 
 /*[Top Plate]*/
 //Thickness (mm) of the top plate body (recess depth is added on top).

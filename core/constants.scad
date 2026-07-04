@@ -117,6 +117,21 @@ BACKER_GRID_TOP_MARGIN = 2;
 //HOK connector cutouts
 BACKER_HOK_SAFE_CLEARANCE = 17;
 
+//---------- End piece geometry (DeskWare design language) ----------
+
+//Upward tilt angle of the squared end's outer face
+END_ANGLE = 11;
+//Width of the angled slab that forms the squared end
+END_ANGLE_DISTANCE = 89;
+//Bevel of the angled slab
+END_BEVEL = 5;
+//Resulting horizontal reach of a squared end piece
+END_LATERAL_WIDTH = cos(END_ANGLE) * END_ANGLE_DISTANCE;
+//Corner rounding of the "Squared" style (the sharp variant)
+END_SQUARED_RADIUS = 1;
+//Curve resolution ($fn) for rounded end pieces
+END_CURVE_RESOLUTION = 100;
+
 //---------- Small printed screw thread profile ----------
 
 //Distance between threads

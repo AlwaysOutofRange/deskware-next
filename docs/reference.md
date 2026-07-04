@@ -26,7 +26,8 @@ original sources preserved in `legacy/`).
 | `WALL_THICKNESS` / `BOTTOM_THICKNESS` | 3 / 2 | Drawer walls and floors. |
 | `CLEARANCE` | 0.15 | Fit clearance between mating parts. |
 | `DIVIDER_THICKNESS` | 2 | Drawer compartment divider walls. |
-| `CORNER_RADIUS` | 50 | Rounded-square end pieces (future milestone). |
+| `CORNER_RADIUS` | 50 | Corner rounding of "Rounded Square" end pieces. |
+| `END_STYLE` | `"Rounded Square"` | End cap style: `Rounded`, `Squared`, `Rounded Square`. |
 | `TOP_PLATE_*` | — | Thickness, insert recess depth, lip width, chamfer, seating clearance. |
 | `DRAWER_*` | — | Mounting method (printed handle / screw pulls), front chamfer, inlay recess. |
 | `CONNECTOR_STYLE` | `"dovetail"` | Seam joint style: `dovetail`, `dowel`, `magnet`. |
@@ -57,6 +58,10 @@ top_plate(width = PLATE_WIDTH, thickness = 8.5, recess = 1);
 riser(slide_sides = "BOTH", height = 80, chamfer = 0);
 riser_split(height1 = 80, height2 = 40);        //stepped-height riser halves
 backer(width = PLATE_WIDTH, height = 80);
+
+//end caps (style: "Rounded", "Squared", "Rounded Square")
+base_plate_end(style = END_STYLE, side = LEFT);
+top_plate_end(style = END_STYLE, side = RIGHT);
 
 //drawers
 drawer(height_units = 1, rows = 2, columns = 3);  //built-in compartments

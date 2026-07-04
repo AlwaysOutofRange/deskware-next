@@ -55,7 +55,7 @@ The full API is documented in [`docs/reference.md`](docs/reference.md).
 | `core/` | Fixed system constants, pure derivation functions, print-fit checks, split system |
 | `geometry/` | 2D cross-section profiles and sweep helpers |
 | `connectors/` | HOK connectors, dovetails, dowels, magnets, tabs, slides, screws, seam joint API |
-| `modules/` | The parts: plates, drawers + fronts, handle, riser, backer, dividers, `storage_system()` |
+| `modules/` | The parts: plates, end caps, drawers + fronts, handle, riser, backer, dividers, `storage_system()` |
 | `vendor/` | openGrid tiles (by David D), ported verbatim |
 | `examples/` | Ready-to-render demos (see gallery above) |
 | `docs/` | [Reference](docs/reference.md) and gallery images |

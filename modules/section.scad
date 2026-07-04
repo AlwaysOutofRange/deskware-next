@@ -19,6 +19,8 @@ Licensed CC-BY-NC-SA 4.0. See LICENSE.md for attribution.
 //  total_height - bottom of the risers to the top of the top plate
 //  drawers      - fill every slide slot with a 1-unit drawer
 //  fronts       - add drawer fronts (and printed handles per DRAWER_MOUNTING)
+//  ends         - cap the outer sections with end pieces
+//  end_style    - "Rounded", "Squared", or "Rounded Square"
 //  explode      - lift the plate stack and slide drawers out, for display
 module storage_system(
     sections = 1,
@@ -27,6 +29,8 @@ module storage_system(
     total_height = TOTAL_HEIGHT,
     drawers = true,
     fronts = true,
+    ends = true,
+    end_style = END_STYLE,
     slide_sides = "BOTH",
     explode = 0
 ){
@@ -58,6 +62,17 @@ module storage_system(
     up(riser_h + BASE_PLATE_THICKNESS + explode*2)
         xcopies(spacing = width, n = sections)
             top_plate(width = width, depth = tp_d, anchor=BOT);
+
+    //end caps on the outer sections
+    if(ends){
+        up(riser_h + CLEARANCE + explode)
+            xcopies(spacing = width * sections)
+                base_plate_end(style = end_style, side = $idx == 0 ? LEFT : RIGHT,
+                               depth = bp_d, hok_spacing = hok_depth, anchor=BOT+RIGHT);
+        up(riser_h + BASE_PLATE_THICKNESS + explode*2)
+            xcopies(spacing = width * sections + CLEARANCE*2)
+                top_plate_end(style = end_style, side = $idx == 0 ? LEFT : RIGHT, depth = tp_d);
+    }
 
     //drawers in every slot
     if(drawers && slide_sides == "BOTH" && n_slots > 0)

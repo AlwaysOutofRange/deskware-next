@@ -1,0 +1,15 @@
+{
+    "fileFormatVersion": "1",
+    "parameterSets": {
+        "New set 1": {
+            "Drawer_Columns": "1",
+            "Drawer_Rows": "1",
+            "Drawer_Units": "2",
+            "Height": "107.5",
+            "Part": "assembly",
+            "Section_Depth": "200.5",
+            "Section_Width": "200",
+            "Sections": "1"
+        }
+    }
+}

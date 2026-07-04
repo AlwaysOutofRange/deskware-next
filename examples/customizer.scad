@@ -10,7 +10,9 @@ Licensed CC-BY-NC-SA 4.0. See LICENSE.md for attribution.
 
 /*[Part]*/
 //Which part to generate (assembly = display view of everything)
-Part = "assembly"; //[assembly, base plate, top plate, riser, backer, drawer, drawer front, drawer handle, divider insert]
+Part = "assembly"; //[assembly, base plate, top plate, riser, backer, drawer, drawer front, drawer handle, divider insert, base plate end, top plate end]
+//End cap style (assembly and end parts)
+End_Style = "Rounded Square"; //[Rounded, Squared, Rounded Square]
 
 /*[Dimensions]*/
 //Width (mm) of one section, riser center to riser center
@@ -41,7 +43,11 @@ hok_depth = hok_spacing_depth(baseplate_grid_depth_units(bp_d, GRID_SIZE, BASEPL
 hok_back = hok_spacing_back(baseplate_grid_width_units(Section_Width, GRID_SIZE, RISER_WIDTH), GRID_SIZE);
 
 if(Part == "assembly")
-    storage_system(sections = Sections, width = Section_Width, depth = Section_Depth, total_height = Height);
+    storage_system(sections = Sections, width = Section_Width, depth = Section_Depth, total_height = Height, end_style = End_Style);
+else if(Part == "base plate end")
+    base_plate_end(style = End_Style, side = LEFT, depth = bp_d, hok_spacing = hok_depth, anchor=BOT+RIGHT);
+else if(Part == "top plate end")
+    top_plate_end(style = End_Style, side = LEFT, depth = tp_d);
 else if(Part == "base plate")
     base_plate(width = Section_Width, depth = bp_d, anchor=BOT);
 else if(Part == "top plate")
