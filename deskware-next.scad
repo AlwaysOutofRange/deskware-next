@@ -22,6 +22,7 @@ include <core/constants.scad>
 include <config.scad>
 include <core/math.scad>
 include <core/utilities.scad>
+include <core/split.scad>
 
 include <geometry/profiles.scad>
 include <geometry/extrusions.scad>

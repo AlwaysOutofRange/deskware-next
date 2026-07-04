@@ -29,7 +29,7 @@ prints.
 | Path | Contents |
 | --- | --- |
 | `config.scad` | User-facing parameters (dimensions, clearances, print bed, colors) |
-| `core/` | Fixed system constants, pure derivation functions, shared helpers |
+| `core/` | Fixed system constants, pure derivation functions, shared helpers, split system |
 | `geometry/` | 2D cross-section profiles and sweep helpers |
 | `connectors/` | HOK connectors, dovetails, dowels, magnets, tabs, slides, screws, seam joint API |
 | `modules/` | The parts: base plate, top plate, drawer + front, handle, riser, backer, dividers |
@@ -45,7 +45,7 @@ prints.
 - [x] **M4** — dynamic divider system (`drawer(rows, columns)` + drop-in `divider_insert()`)
 - [x] **M5** — connector system (`CONNECTOR_STYLE`-dispatched seam joints: dovetail, dowel, magnet)
 - [ ] **M6** — accessories
-- [ ] **M7** — automatic split generation for oversized parts
+- [x] **M7** — automatic split generation for oversized parts (`split_part()` with seam connectors)
 - [ ] **M8** — documentation and examples
 
 ## License

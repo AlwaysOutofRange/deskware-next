@@ -11,14 +11,14 @@ function fits_print_bed(size, bed) =
     (size.x <= bed.x && size.y <= bed.y) ||
     (size.x <= bed.y && size.y <= bed.x);
 
-//Warn if a part footprint exceeds the print bed. Automatic splitting of
-//oversized parts arrives in a later milestone; until then this is the guard.
+//Warn if a part footprint exceeds the print bed.
 module check_printable(size, name = "part", bed = [MAX_PRINT_WIDTH, MAX_PRINT_DEPTH]) {
     if (fits_print_bed(size, bed))
         debug_echo(str(name, " (", size.x, " x ", size.y, " mm) fits the print bed"));
     else
         echo(str("WARNING: ", name, " (", size.x, " x ", size.y,
-                 " mm) exceeds the print bed (", bed.x, " x ", bed.y, " mm)"));
+                 " mm) exceeds the print bed (", bed.x, " x ", bed.y,
+                 " mm) - wrap it in split_part() to cut it into printable pieces"));
 }
 
 //Echo gated behind the VERBOSE config flag.

@@ -90,6 +90,15 @@ function drawer_outside_depth(core_depth, backer_cutout, clearance, wall, unit) 
 function drawer_height(height_units, separation, vertical_clearance) =
     height_units * separation - vertical_clearance;
 
+//---------- Splitting oversized parts ----------
+
+//Number of printable pieces a span must be cut into.
+function split_count(span, max_span) = max(1, ceil(span / max_span));
+
+//Cut positions (centered offsets) dividing span into n equal pieces.
+function split_positions(span, n) =
+    n <= 1 ? [] : [for(i = [1:1:n-1]) -span/2 + i*span/n];
+
 //---------- Connector placement ----------
 
 //Evenly spread connector positions along a seam of the given span, keeping

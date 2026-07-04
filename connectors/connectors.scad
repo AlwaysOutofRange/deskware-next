@@ -80,7 +80,7 @@ module seam_connector_keys(
 
     for(x = pos){
         if(style == "dovetail")
-            translate([x, 0, seam.y - (dovetail_depth - 0.6)/2 + 0.01])
+            translate([x, 0, seam.y - (dovetail_depth - 0.6)/2])
                 dovetail_male(width=dovetail_width, height=dovetail_height, depth=dovetail_depth, col=col);
         else if(style == "dowel")
             translate([x, 0, seam.y/2])
