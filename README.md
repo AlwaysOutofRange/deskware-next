@@ -72,7 +72,7 @@ The full API is documented in [`docs/reference.md`](docs/reference.md).
 - [x] **M3** — dynamic drawer generator (plus riser and backer, completing the core section)
 - [x] **M4** — dynamic divider system (`drawer(rows, columns)` + drop-in `divider_insert()`)
 - [x] **M5** — connector system (`CONNECTOR_STYLE`-dispatched seam joints: dovetail, dowel, magnet)
-- [ ] **M6** — accessories (pen holder, trays, bins)
+- [x] **M6** — accessories: skipped by design — the plates carry standard openGrid fields, so the existing openGrid accessory ecosystem drops straight in
 - [x] **M7** — automatic split generation for oversized parts (`split_part()` with seam connectors)
 - [x] **M8** — documentation and examples
 

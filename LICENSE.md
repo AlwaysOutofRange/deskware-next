@@ -13,6 +13,6 @@ original project's terms.
 - **DeskWare design** — Katie of *Hands on Katie* (YouTube, Patreon, Discord)
 - **Original OpenSCAD implementation** — BlackjackDuck (Andy)
 - **openGrid** — David D (Printables), with optimization by Pedro Leite
-- **DeskWare Next refactor** — the DeskWare Next contributors
+- **DeskWare Next refactor** — AlwaysOutofRange
 
 The unmodified original sources are preserved in [`legacy/`](legacy/).
