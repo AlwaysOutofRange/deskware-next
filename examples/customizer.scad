@@ -5,14 +5,16 @@ Open this file in OpenSCAD and use the Customizer panel to generate any
 part - or the whole assembly - at any dimensions. This is the interactive
 entry point to the framework: pick the part, set the dimensions, export.
 
+More knobs (wall thickness, top plate recess, drawer mounting method,
+colors...) live in config.scad - every module defaults to those values.
+The single-file build (tools/flatten.py) exposes them in this panel too.
+
 Licensed CC-BY-NC-SA 4.0. See LICENSE.md for attribution.
 */
 
 /*[Part]*/
 //Which part to generate (assembly = display view of everything)
-Part = "assembly"; //[assembly, base plate, top plate, riser, backer, drawer, drawer front, drawer handle, divider insert, base plate end, top plate end]
-//End cap style (assembly and end parts)
-End_Style = "Rounded Square"; //[Rounded, Squared, Rounded Square]
+Part = "assembly"; //[assembly, base plate, top plate, riser, riser (stepped), backer, drawer, drawer front, drawer handle, divider insert, base plate end, top plate end]
 
 /*[Dimensions]*/
 //Width (mm) of one section, riser center to riser center
@@ -24,6 +26,12 @@ Height = 107.5;
 //Number of sections (assembly only)
 Sections = 1;
 
+/*[End Style]*/
+//End cap style (assembly and end parts)
+End_Style = "Rounded Square"; //[Rounded, Squared, Rounded Square]
+//Corner radius (mm) of "Rounded Square" ends
+Corner_Radius = 50;
+
 /*[Drawer Options]*/
 //Drawer height in slide units (40mm each)
 Drawer_Units = 1;
@@ -31,6 +39,23 @@ Drawer_Units = 1;
 Drawer_Rows = 1;
 //Compartments left-to-right
 Drawer_Columns = 1;
+
+/*[Riser Options]*/
+//Which sides of the riser get drawer slides
+Slide_Sides = "BOTH"; //[BOTH, LEFT, RIGHT, NONE]
+//Chamfer (mm) of the riser front edges
+Riser_Chamfer = 0;
+//Total height (mm) of the taller half of a stepped riser
+Stepped_Outer_Height = 107.5;
+//Total height (mm) of the shorter half of a stepped riser
+Stepped_Inner_Height = 67.5;
+
+/*[Assembly Display]*/
+Show_Drawers = true;
+Show_Fronts = true;
+Show_Ends = true;
+//Lift the plate stack and slide the drawers out (mm)
+Explode = 0;
 
 include <../deskware-next.scad>
 
@@ -43,17 +68,27 @@ hok_depth = hok_spacing_depth(baseplate_grid_depth_units(bp_d, GRID_SIZE, BASEPL
 hok_back = hok_spacing_back(baseplate_grid_width_units(Section_Width, GRID_SIZE, RISER_WIDTH), GRID_SIZE);
 
 if(Part == "assembly")
-    storage_system(sections = Sections, width = Section_Width, depth = Section_Depth, total_height = Height, end_style = End_Style);
+    storage_system(sections = Sections, width = Section_Width, depth = Section_Depth,
+                   total_height = Height, end_style = End_Style, end_radius = Corner_Radius,
+                   slide_sides = Slide_Sides, drawers = Show_Drawers, fronts = Show_Fronts,
+                   ends = Show_Ends, explode = Explode);
 else if(Part == "base plate end")
-    base_plate_end(style = End_Style, side = LEFT, depth = bp_d, hok_spacing = hok_depth, anchor=BOT+RIGHT);
+    base_plate_end(style = End_Style, side = LEFT, radius = Corner_Radius,
+                   depth = bp_d, hok_spacing = hok_depth, anchor=BOT+RIGHT);
 else if(Part == "top plate end")
-    top_plate_end(style = End_Style, side = LEFT, depth = tp_d);
+    top_plate_end(style = End_Style, side = LEFT, radius = Corner_Radius, depth = tp_d);
 else if(Part == "base plate")
     base_plate(width = Section_Width, depth = bp_d, anchor=BOT);
 else if(Part == "top plate")
     top_plate(width = Section_Width, depth = tp_d, anchor=BOT);
 else if(Part == "riser")
-    riser(height = riser_h, depth = riser_depth(Section_Depth, RISER_SETBACK), hok_spacing = hok_depth);
+    riser(slide_sides = Slide_Sides, chamfer = Riser_Chamfer,
+          height = riser_h, depth = riser_depth(Section_Depth, RISER_SETBACK), hok_spacing = hok_depth);
+else if(Part == "riser (stepped)")
+    riser_split(slide_sides = Slide_Sides, chamfer = Riser_Chamfer,
+                height1 = core_section_height(Stepped_Outer_Height, TOP_PLATE_THICKNESS, BASE_PLATE_THICKNESS),
+                height2 = core_section_height(Stepped_Inner_Height, TOP_PLATE_THICKNESS, BASE_PLATE_THICKNESS),
+                depth = riser_depth(Section_Depth, RISER_SETBACK));
 else if(Part == "backer")
     backer(width = Section_Width, height = riser_h, hok_spacing = hok_back);
 else if(Part == "drawer")

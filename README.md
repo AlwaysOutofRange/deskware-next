@@ -45,11 +45,19 @@ The full API is documented in [`docs/reference.md`](docs/reference.md).
 Platforms like MakerWorld's parametric maker lab accept only one `.scad`
 file. `tools/flatten.py` inlines all project includes (keeping the BOSL2
 ones, which such platforms provide) into a self-contained, geometrically
-identical build, hiding the framework internals from the Customizer panel:
+identical build. Framework internals are hidden from the Customizer panel;
+`--expose` keeps a file's sections visible — exposing `config.scad` gives
+the full options panel (walls, top plate, drawer mounting, colors, …):
 
 ```bash
-python3 tools/flatten.py examples/customizer.scad -o build/deskware-next-makerworld.scad
+python3 tools/flatten.py examples/customizer.scad -o build/deskware-next-makerworld.scad \
+    --expose config.scad \
+    --hide-section "Core Dimensions" --hide-section "Print Bed" \
+    --hide-section "End Style" --hide-section "Curve Sections" --hide-section "Connectors"
 ```
+
+(The hidden sections are the ones the customizer entry re-exposes with its
+own parameters, plus ones meaningless on an online platform.)
 
 ## Examples
 

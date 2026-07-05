@@ -34,10 +34,12 @@ BOTTOM_THICKNESS = 2;
 CLEARANCE = 0.15;
 //Wall thickness (mm) of drawer compartment dividers.
 DIVIDER_THICKNESS = 2;
-//Corner radius (mm) for rounded-square end pieces.
-CORNER_RADIUS = 50;
+
+/*[End Style]*/
 //Style of the end pieces capping the outer sections.
 END_STYLE = "Rounded Square"; //[Rounded, Squared, Rounded Square]
+//Corner radius (mm) for rounded-square end pieces.
+CORNER_RADIUS = 50;
 
 /*[Top Plate]*/
 //Thickness (mm) of the top plate body (recess depth is added on top).

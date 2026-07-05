@@ -8,12 +8,15 @@ include semantics). Library includes that don't resolve inside the project
 (BOSL2/...) are kept, deduplicated to their first occurrence - MakerWorld's
 parametric maker lab provides BOSL2, but only accepts a single model file.
 
-Each inlined file is prefixed with a /*[Hidden]*/ customizer section so the
-framework's internal constants don't appear in the Customizer UI; only the
-entry file's own parameters (declared before its first include) show up.
-Pass --expose for files whose customizer sections should stay visible.
+Each inlined file is forced into the /*[Hidden]*/ customizer section (its
+own section markers are neutralized too) so framework internals don't
+appear in the Customizer UI; only the entry file's parameters show up.
+Pass --expose for files whose customizer sections should stay visible, and
+--hide-section to hide individual sections of exposed files (e.g. ones the
+entry file duplicates with its own parameters).
 
-    python3 tools/flatten.py examples/customizer.scad -o build/deskware-next-makerworld.scad
+    python3 tools/flatten.py examples/customizer.scad -o build/deskware-next-makerworld.scad \
+        --expose config.scad --hide-section "Core Dimensions"
 
 Licensed CC-BY-NC-SA 4.0. See LICENSE.md for attribution.
 """
@@ -25,6 +28,7 @@ import sys
 from pathlib import Path
 
 INCLUDE_RE = re.compile(r"^\s*(include|use)\s*<([^>]+)>\s*;?\s*$")
+SECTION_RE = re.compile(r"^\s*/\*\s*\[(.*?)\]\s*\*/\s*$")
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 
@@ -38,12 +42,19 @@ def resolve(target: str, including_file: Path) -> Path | None:
     return None
 
 
-def flatten(path: Path, seen: set[Path], expose: set[Path], top: bool) -> list[str]:
+def flatten(path: Path, seen: set[Path], expose: set[Path],
+            hide_sections: set[str], top: bool) -> list[str]:
     out = []
     for line in path.read_text().splitlines():
         m = INCLUDE_RE.match(line)
         if not m:
-            out.append(line)
+            # keep the entry file's customizer sections; in inlined files,
+            # hide everything except exposed files' non-hidden sections
+            s = SECTION_RE.match(line)
+            if s and not top and (path not in expose or s.group(1) in hide_sections):
+                out.append("/*[Hidden]*/")
+            else:
+                out.append(line)
             continue
         kind, target = m.groups()
         resolved = resolve(target, path)
@@ -62,10 +73,11 @@ def flatten(path: Path, seen: set[Path], expose: set[Path], top: bool) -> list[s
         seen.add(resolved)
         rel = resolved.relative_to(PROJECT_ROOT)
         out.append(f"//======== begin {rel} ========")
-        if resolved not in expose:
-            out.append("/*[Hidden]*/")
-        out.extend(flatten(resolved, seen, expose, top=False))
+        out.append("/*[Hidden]*/")
+        out.extend(flatten(resolved, seen, expose, hide_sections, top=False))
         out.append(f"//======== end {rel} ========")
+        if not top and path not in expose:
+            out.append("/*[Hidden]*/")  # don't leak into the includer's rest
     return out
 
 
@@ -75,11 +87,14 @@ def main():
     ap.add_argument("-o", "--output", type=Path, required=True)
     ap.add_argument("--expose", type=Path, action="append", default=[],
                     help="project file whose customizer parameters stay visible")
+    ap.add_argument("--hide-section", action="append", default=[], metavar="NAME",
+                    help="customizer section of an exposed file to hide anyway")
     args = ap.parse_args()
 
     entry = args.entry.resolve()
     expose = {p.resolve() for p in args.expose}
-    body = flatten(entry, seen=set(), expose=expose, top=True)
+    body = flatten(entry, seen=set(), expose=expose,
+                   hide_sections=set(args.hide_section), top=True)
 
     header = [
         f"//GENERATED FILE - do not edit. Built by tools/flatten.py from",

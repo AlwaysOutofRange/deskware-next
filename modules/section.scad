@@ -21,6 +21,7 @@ Licensed CC-BY-NC-SA 4.0. See LICENSE.md for attribution.
 //  fronts       - add drawer fronts (and printed handles per DRAWER_MOUNTING)
 //  ends         - cap the outer sections with end pieces
 //  end_style    - "Rounded", "Squared", or "Rounded Square"
+//  end_radius   - corner radius of "Rounded Square" ends
 //  explode      - lift the plate stack and slide drawers out, for display
 module storage_system(
     sections = 1,
@@ -31,6 +32,7 @@ module storage_system(
     fronts = true,
     ends = true,
     end_style = END_STYLE,
+    end_radius = CORNER_RADIUS,
     slide_sides = "BOTH",
     explode = 0
 ){
@@ -67,11 +69,11 @@ module storage_system(
     if(ends){
         up(riser_h + CLEARANCE + explode)
             xcopies(spacing = width * sections)
-                base_plate_end(style = end_style, side = $idx == 0 ? LEFT : RIGHT,
+                base_plate_end(style = end_style, side = $idx == 0 ? LEFT : RIGHT, radius = end_radius,
                                depth = bp_d, hok_spacing = hok_depth, anchor=BOT+RIGHT);
         up(riser_h + BASE_PLATE_THICKNESS + explode*2)
             xcopies(spacing = width * sections + CLEARANCE*2)
-                top_plate_end(style = end_style, side = $idx == 0 ? LEFT : RIGHT, depth = tp_d);
+                top_plate_end(style = end_style, side = $idx == 0 ? LEFT : RIGHT, radius = end_radius, depth = tp_d);
     }
 
     //drawers in every slot
