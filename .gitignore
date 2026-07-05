@@ -1,3 +1,6 @@
+# Generated single-file builds (tools/flatten.py)
+build/
+
 # Render outputs
 *.stl
 *.3mf

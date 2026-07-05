@@ -40,6 +40,17 @@ Defaults live in [`config.scad`](config.scad) — including your print bed
 size (`MAX_PRINT_WIDTH`/`MAX_PRINT_DEPTH`); parts warn when they exceed it.
 The full API is documented in [`docs/reference.md`](docs/reference.md).
 
+### Single-file build
+
+Platforms like MakerWorld's parametric maker lab accept only one `.scad`
+file. `tools/flatten.py` inlines all project includes (keeping the BOSL2
+ones, which such platforms provide) into a self-contained, geometrically
+identical build, hiding the framework internals from the Customizer panel:
+
+```bash
+python3 tools/flatten.py examples/customizer.scad -o build/deskware-next-makerworld.scad
+```
+
 ## Examples
 
 | | |
@@ -61,6 +72,7 @@ The full API is documented in [`docs/reference.md`](docs/reference.md).
 | `connectors/` | HOK connectors, dovetails, dowels, magnets, tabs, slides, screws, seam joint API |
 | `modules/` | The parts: plates, end caps, drawers + fronts, handle, riser, backer, dividers, `storage_system()` |
 | `vendor/` | openGrid tiles (by David D), ported verbatim |
+| `tools/` | Build helpers: `flatten.py` single-file build for MakerWorld-style platforms |
 | `examples/` | Ready-to-render demos (see gallery above) |
 | `docs/` | [Reference](docs/reference.md) and gallery images |
 | `legacy/` | The original monolithic sources, unmodified — the regression oracle |
