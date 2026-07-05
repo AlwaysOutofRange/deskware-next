@@ -84,6 +84,13 @@ volume and bounding-box deltas, so DeskWare Next parts mate with original
 DeskWare prints. See the provenance section of the
 [reference](docs/reference.md).
 
+## AI disclosure
+
+The DeskWare Next refactor was written with substantial help from
+[Claude Code](https://claude.com/claude-code), Anthropic's coding agent —
+under human direction, with every part verified against the original
+sources and validated in test prints.
+
 ## License
 
 CC BY-NC-SA 4.0, inherited from the original DeskWare. See
